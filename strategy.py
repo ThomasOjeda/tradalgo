@@ -25,21 +25,17 @@ class MyStrategy(bt.Strategy):
         ("periodSmaLongSell", 40),
         ("stopBuyingAt", 1.0),
         ("buyTimerLimit", 0),
+        ("printLog", True),
     )
 
-    def log(self, txt, dt=None, doprint=False):
-        if doprint:
+    def log(self, txt, dt=None):
+        if self.params.printLog:
             dt = dt or self.datas[0].datetime.date(0)
             print("%s, %s" % (dt.isoformat(), txt))
 
     def __init__(self):
         # Starting value
         self.startingValue = self.broker.getvalue()
-
-        # To keep track of pending orders and buy price/commission
-        self.order = None
-        self.buyprice = None
-        self.buycomm = None
 
         self.smaShort = bt.ind.SMA(period=self.params.periodSmaShortBuy)
         self.smaLong = bt.ind.SMA(period=self.params.periodSmaLongBuy)
@@ -54,7 +50,6 @@ class MyStrategy(bt.Strategy):
         self.crossoverBuy = bt.ind.CrossOver(self.smaShort, self.smaLong)
         self.crossoverSell = bt.ind.CrossOver(self.smaShortSell, self.smaLongSell)
 
-        self.buyTimerLimit = self.params.buyTimerLimit
         self.timer = 0
 
     def notify_order(self, order):
@@ -65,32 +60,23 @@ class MyStrategy(bt.Strategy):
             if order.isbuy():
                 self.log(
                     "BUY EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f"
-                    % (order.executed.price, order.executed.value, order.executed.comm),
-                    doprint=False,
+                    % (order.executed.price, order.executed.value, order.executed.comm)
                 )
 
-                self.buyprice = order.executed.price
-                self.buycomm = order.executed.comm
             else:
                 self.log(
                     "SELL EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f"
-                    % (order.executed.price, order.executed.value, order.executed.comm),
-                    doprint=False,
+                    % (order.executed.price, order.executed.value, order.executed.comm)
                 )
 
-            self.bar_executed = len(self)
-
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
-            self.log("Order Canceled/Margin/Rejected", doprint=False)
+            self.log("Order Canceled/Margin/Rejected")
 
     def notify_trade(self, trade):
         if not trade.isclosed:
             return
 
-        self.log(
-            "OPERATION PROFIT, GROSS %.2f, NET %.2f" % (trade.pnl, trade.pnlcomm),
-            doprint=False,
-        )
+        self.log("OPERATION PROFIT, GROSS %.2f, NET %.2f" % (trade.pnl, trade.pnlcomm))
 
     def next(self):
         # If i sold very recently, dont buy.
@@ -110,4 +96,4 @@ class MyStrategy(bt.Strategy):
             self.buy()
         elif sellSignal:
             self.close()
-            self.timer = self.buyTimerLimit
+            self.timer = self.params.buyTimerLimit
