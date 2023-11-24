@@ -16,8 +16,8 @@ if __name__ == "__main__":
 
     data = bt.feeds.YahooFinanceCSVData(
         dataname=datapath,
-        fromdate=datetime.datetime(2009, 1, 1),
-        todate=datetime.datetime(2013, 12, 31),
+        fromdate=datetime.datetime(1997, 1, 1),
+        todate=datetime.datetime(2002, 12, 31),
         reverse=False,
     )
 
@@ -49,7 +49,3 @@ if __name__ == "__main__":
         buyTimerLimit=20,
         printLog=False,
     ) """
-
-    # (best_periodSmaShortBuy 30) (best_periodSmaLongBuy 40) (best_periodSmaShortSell 40) (best_periodSmaLongSell 210) Ending Value 23642.17
-    # fromdate=datetime.datetime(1997, 1, 1),
-    # todate=datetime.datetime(2006, 12, 31),
