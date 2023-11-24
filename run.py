@@ -9,6 +9,7 @@ def run(
     periodSmaLongSell,
     stopBuyingAt,
     buyTimerLimit,
+    printLog,
 ):
     cerebro.addstrategy(
         MyStrategy,
@@ -18,6 +19,7 @@ def run(
         periodSmaLongSell=periodSmaLongSell,
         stopBuyingAt=stopBuyingAt,
         buyTimerLimit=buyTimerLimit,
+        printLog=printLog,
     )
 
     print("Starting Portfolio Value: %.2f" % cerebro.broker.getvalue())

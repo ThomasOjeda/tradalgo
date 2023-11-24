@@ -9,6 +9,7 @@ def optimize(
     periodSmaLongSell,
     stopBuyingAt,
     buyTimerLimit,
+    printLog,
 ):
     cerebro.optstrategy(
         MyStrategy,
@@ -18,6 +19,7 @@ def optimize(
         periodSmaLongSell=periodSmaLongSell,
         stopBuyingAt=stopBuyingAt,
         buyTimerLimit=buyTimerLimit,
+        printLog=printLog,
     )
 
     best_result = float("-inf")

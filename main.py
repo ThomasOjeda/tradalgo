@@ -16,8 +16,8 @@ if __name__ == "__main__":
 
     data = bt.feeds.YahooFinanceCSVData(
         dataname=datapath,
-        fromdate=datetime.datetime(1999, 1, 1),
-        todate=datetime.datetime(2001, 12, 31),
+        fromdate=datetime.datetime(2009, 1, 1),
+        todate=datetime.datetime(2013, 12, 31),
         reverse=False,
     )
 
@@ -29,21 +29,27 @@ if __name__ == "__main__":
 
     cerebro.broker.setcommission(commission=0.001)
 
-    """     run(
+    run(
         cerebro,
-        periodSmaShortBuy=10,
-        periodSmaLongBuy=20,
-        periodSmaShortSell=20,
-        periodSmaLongSell=40,
+        periodSmaShortBuy=5,
+        periodSmaLongBuy=35,
+        periodSmaShortSell=45,
+        periodSmaLongSell=190,
         stopBuyingAt=0.5,
         buyTimerLimit=20,
-    ) """
-    optimize(
-        cerebro,
-        periodSmaShortBuy=range(5, 11),
-        periodSmaLongBuy=range(15, 21),
-        periodSmaShortSell=range(15, 21),
-        periodSmaLongSell=range(35, 41),
-        stopBuyingAt=0.5,
-        buyTimerLimit=20,
+        printLog=True,
     )
+    """ optimize(
+        cerebro,
+        periodSmaShortBuy=(5, 10, 15, 20, 25, 30),
+        periodSmaLongBuy=(35, 40, 45, 50, 55, 60, 65),
+        periodSmaShortSell=(40, 45, 50, 55, 60, 65, 70),
+        periodSmaLongSell=(185, 190, 195, 200, 205, 210, 215),
+        stopBuyingAt=0.5,
+        buyTimerLimit=20,
+        printLog=False,
+    ) """
+
+    # (best_periodSmaShortBuy 30) (best_periodSmaLongBuy 40) (best_periodSmaShortSell 40) (best_periodSmaLongSell 210) Ending Value 23642.17
+    # fromdate=datetime.datetime(1997, 1, 1),
+    # todate=datetime.datetime(2006, 12, 31),

@@ -19,10 +19,10 @@ class CarefulSizer(bt.Sizer):
 
 class MyStrategy(bt.Strategy):
     params = (
-        ("periodSmaShortBuy", 10),
-        ("periodSmaLongBuy", 20),
-        ("periodSmaShortSell", 20),
-        ("periodSmaLongSell", 40),
+        ("periodSmaShortBuy", 20),
+        ("periodSmaLongBuy", 40),
+        ("periodSmaShortSell", 50),
+        ("periodSmaLongSell", 200),
         ("stopBuyingAt", 1.0),
         ("buyTimerLimit", 0),
         ("printLog", True),
@@ -44,7 +44,7 @@ class MyStrategy(bt.Strategy):
         self.smaLongSell = bt.ind.SMA(period=self.params.periodSmaLongSell)
         self.macd = bt.ind.MACD()
 
-        self.rsi = bt.ind.RelativeMomentumIndex()
+        self.rsi = bt.ind.RSI()
 
         # Crossover Lines
         self.crossoverBuy = bt.ind.CrossOver(self.smaShort, self.smaLong)
@@ -88,9 +88,12 @@ class MyStrategy(bt.Strategy):
             and self.timer <= 0
             and self.crossoverBuy[0] > 0
             and self.macd.macd[0] > self.macd.signal[0]
-            and self.rsi[0] > 70
+            and self.rsi[0] < 70
         )
-        sellSignal = self.crossoverSell[0] < 0
+
+        sellSignal = (
+            self.crossoverSell[0] < 0 and self.macd.macd[0] < self.macd.signal[0]
+        )
 
         if buySignal:
             self.buy()
