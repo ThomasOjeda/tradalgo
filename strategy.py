@@ -37,8 +37,8 @@ class MyStrategy(bt.Strategy):
         # Starting value
         self.startingValue = self.broker.getvalue()
 
-        self.smaShort = bt.ind.SMA(period=self.params.periodSmaShortBuy)
-        self.smaLong = bt.ind.SMA(period=self.params.periodSmaLongBuy)
+        self.smaShortBuy = bt.ind.SMA(period=self.params.periodSmaShortBuy)
+        self.smaLongBuy = bt.ind.SMA(period=self.params.periodSmaLongBuy)
 
         self.smaShortSell = bt.ind.SMA(period=self.params.periodSmaShortSell)
         self.smaLongSell = bt.ind.SMA(period=self.params.periodSmaLongSell)
@@ -47,7 +47,7 @@ class MyStrategy(bt.Strategy):
         self.rsi = bt.ind.RSI()
 
         # Crossover Lines
-        self.crossoverBuy = bt.ind.CrossOver(self.smaShort, self.smaLong)
+        self.crossoverBuy = bt.ind.CrossOver(self.smaShortBuy, self.smaLongBuy)
         self.crossoverSell = bt.ind.CrossOver(self.smaShortSell, self.smaLongSell)
 
         self.timer = 0
